@@ -1,0 +1,13 @@
+[project]
+name = "ptc-hackathon"
+version = "0.1.0"
+description = "Conference graph agent: FalkorDB + OpenAI"
+requires-python = ">=3.11"
+dependencies = [
+    "falkordb>=1.0",
+    "openai>=1.40",
+    "python-dotenv>=1.0",
+]
+
+[tool.uv]
+package = false
