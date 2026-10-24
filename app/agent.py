@@ -9,7 +9,7 @@ from openai import OpenAI
 
 from app.db import describe_schema, get_graph
 
-MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
 TOOLS = [{
     "type": "function",

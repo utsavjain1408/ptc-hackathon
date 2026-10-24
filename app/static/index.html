@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patch the Conference</title>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117; --panel: #161b22; --panel-2: #1c2330; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #7c5cff; --accent-2: #3fb950;
+    --warn: #f0883e; --err: #f85149; --chip: #21262d;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
+  a { color: #79c0ff; text-decoration: none; } a:hover { text-decoration: underline; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 32px 16px 80px; }
+  header h1 { font-size: 34px; margin: 0 0 6px; letter-spacing: -0.5px; }
+  header h1 span { background: linear-gradient(90deg, #a78bfa, #79c0ff); -webkit-background-clip: text; color: transparent; }
+  header p { color: var(--muted); margin: 0 0 24px; max-width: 720px; }
+  .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  form.panel { display: grid; grid-template-columns: 1.4fr 1fr auto; gap: 12px; align-items: end; }
+  label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+  input { width: 100%; padding: 11px 12px; border-radius: 8px; border: 1px solid var(--border);
+          background: var(--bg); color: var(--text); font-size: 15px; }
+  input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  button { padding: 11px 18px; border-radius: 8px; border: 0; background: var(--accent); color: white;
+           font-weight: 600; font-size: 15px; cursor: pointer; white-space: nowrap; }
+  button:disabled { opacity: .5; cursor: default; }
+  .error { margin-top: 12px; padding: 12px 14px; border-radius: 8px; background: rgba(248,81,73,.1);
+           border: 1px solid rgba(248,81,73,.4); color: #ffa198; display: none; }
+  .steps { margin-top: 20px; display: none; }
+  .step { display: flex; gap: 12px; padding: 8px 0; align-items: baseline; }
+  .dot { width: 18px; flex: none; text-align: center; }
+  .step .detail { color: var(--muted); font-size: 13px; }
+  .step.pending { color: var(--muted); }
+  .step.error .detail { color: #ffa198; }
+  .spin { display: inline-block; animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+  #results { display: none; margin-top: 24px; }
+  .who { display: flex; gap: 16px; align-items: center; margin-bottom: 20px; }
+  .who img { width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--border); object-fit: cover; }
+  .who h2 { margin: 0; font-size: 24px; } .who p { margin: 2px 0 0; color: var(--muted); }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .full { grid-column: 1 / -1; }
+  h3 { margin: 0 0 4px; font-size: 17px; } .sub { color: var(--muted); font-size: 13px; margin: 0 0 14px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { background: var(--chip); border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px; font-size: 13px; }
+  .chip.on { border-color: var(--accent); color: #d2c4ff; }
+  .interest { padding: 10px 0; border-top: 1px solid var(--border); } .interest:first-of-type { border-top: 0; }
+  .interest b { display: inline-block; margin-right: 8px; } .bar { height: 6px; border-radius: 3px; background: var(--accent); margin: 6px 0; }
+  .quote { color: var(--muted); font-size: 13px; border-left: 2px solid var(--border); padding-left: 10px; margin: 4px 0; }
+  .speaker { padding: 14px 0; border-top: 1px solid var(--border); display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; }
+  .speaker:first-of-type { border-top: 0; }
+  .speaker .name { font-weight: 600; font-size: 16px; } .speaker .role { color: var(--muted); font-size: 13px; }
+  .score { align-self: start; background: rgba(124,92,255,.15); color: #d2c4ff; border-radius: 8px; padding: 2px 8px; font-weight: 600; font-size: 13px; }
+  .speaker .why, .speaker .talk, .speaker .quote, .speaker .reason { grid-column: 1 / -1; }
+  .reason { margin: 4px 0 6px; padding: 8px 12px; border-radius: 8px; background: rgba(124,92,255,.08);
+            border-left: 3px solid var(--accent); font-size: 14px; }
+  .why .chip { font-size: 12px; padding: 2px 8px; }
+  .chip.school { border-color: var(--accent-2); color: #7ee787; } .chip.company { border-color: var(--warn); color: #ffa657; }
+  .talk { font-size: 13px; } .talk .when { color: var(--muted); }
+  .day h4 { margin: 14px 0 8px; font-size: 14px; color: #d2c4ff; } .day:first-child h4 { margin-top: 0; }
+  .slot { display: grid; grid-template-columns: 78px 1fr; gap: 10px; padding: 8px 0; border-top: 1px solid var(--border); font-size: 14px; }
+  .slot .time { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .slot .meta { color: var(--muted); font-size: 12px; }
+  #graph { height: 420px; border-radius: 8px; background: var(--bg); border: 1px solid var(--border); }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 8px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+  #chatlog { max-height: 520px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 12px; }
+  .msg { padding: 10px 14px; border-radius: 10px; max-width: 90%; }
+  .msg.user { align-self: flex-end; background: var(--accent); color: white; }
+  .msg.bot { background: var(--panel-2); border: 1px solid var(--border); }
+  .msg.bot table { border-collapse: collapse; font-size: 13px; } .msg.bot td, .msg.bot th { border: 1px solid var(--border); padding: 4px 8px; }
+  .msg.bot p:first-child { margin-top: 0; } .msg.bot p:last-child { margin-bottom: 0; }
+  details.cypher { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  details.cypher pre { white-space: pre-wrap; background: var(--bg); padding: 8px; border-radius: 6px; }
+  .chatform { display: flex; gap: 8px; } .chatform input { flex: 1; }
+  .suggest { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .suggest button { background: var(--chip); border: 1px solid var(--border); font-weight: 500; font-size: 13px; padding: 6px 10px; }
+  footer { margin-top: 40px; color: var(--muted); font-size: 13px; text-align: center; }
+  @media (max-width: 800px) {
+    form.panel { grid-template-columns: 1fr; } .grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Patch the <span>Conference</span></h1>
+    <p>Paste your LinkedIn profile and a conference. We scrape your profile and every speaker's with Bright Data,
+       build a knowledge graph in FalkorDB, and tell you who to meet, what to attend, and why.</p>
+  </header>
+
+  <form class="panel" id="form">
+    <div><label for="li">Your LinkedIn profile</label>
+      <input id="li" placeholder="https://www.linkedin.com/in/your-name" required></div>
+    <div><label for="conf">Conference name or URL</label>
+      <input id="conf" placeholder="GitHub Universe" value="GitHub Universe" required></div>
+    <button id="go">Build my briefing</button>
+  </form>
+  <div class="error" id="error"></div>
+  <div class="panel steps" id="steps"></div>
+
+  <div id="results">
+    <div class="who" id="who"></div>
+    <div class="grid">
+      <div class="panel">
+        <h3>Your interests</h3>
+        <p class="sub">Inferred from your LinkedIn posts and profile, no form needed.</p>
+        <div id="interests"></div>
+      </div>
+      <div class="panel">
+        <h3>Shared background</h3>
+        <p class="sub">Speakers from your school or company: easy conversation starters.</p>
+        <div id="background"></div>
+      </div>
+      <div class="panel full">
+        <h3>Speakers to meet</h3>
+        <p class="sub">Ranked by shared school or company (+3), talk topics (+2) and recent post topics (+1).</p>
+        <div id="speakers"></div>
+      </div>
+      <div class="panel">
+        <h3>Your schedule</h3>
+        <p class="sub">Best-matching talks, no overlaps, 5 minutes to walk between rooms.</p>
+        <div id="schedule"></div>
+      </div>
+      <div class="panel">
+        <h3>How you're connected</h3>
+        <p class="sub">You, what you share, and your top speakers. Drag to explore.</p>
+        <div id="graph"></div>
+        <div class="legend"><span><i style="background:#7c5cff"></i>You</span><span><i style="background:#79c0ff"></i>Speaker</span>
+          <span><i style="background:#3fb950"></i>School</span><span><i style="background:#f0883e"></i>Company</span><span><i style="background:#8b949e"></i>Topic</span></div>
+      </div>
+      <div class="panel full">
+        <h3>Ask about the conference</h3>
+        <p class="sub">An agent that answers by querying the knowledge graph. It never invents people or talks.</p>
+        <div class="suggest" id="suggest"></div>
+        <div id="chatlog"></div>
+        <form class="chatform" id="chatform"><input id="chatin" placeholder="Who's posting about MCP security?"><button>Ask</button></form>
+      </div>
+    </div>
+  </div>
+  <footer>Data: GitHub Universe 2026 session catalog and public LinkedIn profiles via Bright Data · Graph: FalkorDB · Agent: OpenAI</footer>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let me = null, chat = [];
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("error").style.display = "none"; $("results").style.display = "none";
+  $("go").disabled = true;
+  try {
+    const r = await fetch("/api/analyze", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({linkedin_url: $("li").value, conference: $("conf").value})});
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.detail || "Something went wrong");
+    poll(body.job_id);
+  } catch (err) { showError(err.message); $("go").disabled = false; }
+});
+
+function showError(msg) { $("error").textContent = msg; $("error").style.display = "block"; }
+
+async function poll(id) {
+  $("steps").style.display = "block";
+  const job = await (await fetch(`/api/jobs/${id}`)).json();
+  $("steps").innerHTML = job.steps.map((s) => `
+    <div class="step ${s.status}">
+      <span class="dot">${{pending: "○", running: '<span class="spin">◐</span>', done: "✓", error: "✕"}[s.status]}</span>
+      <div>${esc(s.label)}${s.detail ? `<div class="detail">${esc(s.detail)}</div>` : ""}</div>
+    </div>`).join("");
+  if (job.status === "running") return setTimeout(() => poll(id), 1000);
+  $("go").disabled = false;
+  if (job.status === "done") render(job.result);
+}
+
+function render(r) {
+  me = r.name; chat = []; $("chatlog").innerHTML = "";
+  $("who").innerHTML = `${r.avatar ? `<img src="${esc(r.avatar)}" alt="">` : ""}
+    <div><h2>${esc(r.name)}'s GitHub Universe briefing</h2><p>${esc(r.headline || "")}</p></div>`;
+
+  const top = Math.max(1, ...r.interests.map((i) => i.score));
+  $("interests").innerHTML = r.interests.length ? r.interests.map((i) => `
+    <div class="interest"><b>${esc(i.topic)}</b><span class="sub">score ${i.score}</span>
+      <div class="bar" style="width:${Math.round(100 * i.score / top)}%"></div>
+      ${i.evidence.map((q) => `<div class="quote">${esc(q)}…</div>`).join("")}</div>`).join("")
+    : `<p class="sub">We couldn't find clear topics in your recent posts.</p>`;
+
+  $("background").innerHTML = r.background.length ? r.background.map((b) => `
+    <div class="speaker"><div><div class="name">${b.linkedin ? `<a href="${esc(b.linkedin)}" target="_blank">${esc(b.name)}</a>` : esc(b.name)}</div>
+      <div class="role">${esc(b.title || "")}</div></div>
+      <span class="chip ${b.kind === "School" ? "school" : "company"}">${esc(b.shared)}</span>
+      ${b.talks.map((t) => `<div class="talk">🎤 ${esc(t.title)} <span class="when">· ${esc(t.day)} ${esc(t.start)} · ${esc(t.room)}</span></div>`).join("")}
+    </div>`).join("") : `<p class="sub">No speakers share your school or company.</p>`;
+
+  $("speakers").innerHTML = r.speakers.map((s) => {
+    const topics = [...new Set([...s.talk_topics, ...s.post_topics])];
+    return `<div class="speaker">
+      <div><div class="name">${s.linkedin ? `<a href="${esc(s.linkedin)}" target="_blank">${esc(s.name)}</a>` : esc(s.name)}</div>
+        <div class="role">${esc([s.title, s.company].filter(Boolean).join(" · "))}</div></div>
+      <span class="score">${s.score}</span>
+      ${s.reason ? `<div class="reason">${esc(s.reason)}</div>` : ""}
+      <div class="why chips">${s.schools.map((x) => `<span class="chip school">🎓 ${esc(x)}</span>`).join("")}
+        ${s.companies.map((x) => `<span class="chip company">🏢 ${esc(x)}</span>`).join("")}
+        ${topics.map((x) => `<span class="chip on">${esc(x)}</span>`).join("")}</div>
+      ${s.talks.map((t) => `<div class="talk">🎤 ${esc(t.title)} <span class="when">· ${esc(t.day)} ${esc(t.start)} · ${esc(t.room)}</span></div>`).join("")}
+      ${s.post ? `<div class="quote">${s.post.how === "POSTED" ? "Posted" : "Shared"}: “${esc(s.post.text.slice(0, 220))}…” <a href="${esc(s.post.link)}" target="_blank">post</a></div>` : ""}
+    </div>`;
+  }).join("") || `<p class="sub">No matches yet.</p>`;
+
+  $("schedule").innerHTML = Object.entries(r.schedule).map(([day, talks]) => `
+    <div class="day"><h4>${esc(day)}</h4>${talks.map((t) => `
+      <div class="slot"><div class="time">${esc(t.start)}</div>
+        <div>${esc(t.title)}<div class="meta">${esc(t.room)} · ${esc(t.topics.join(", "))}${t.speakers.length ? " · " + esc(t.speakers.slice(0, 3).join(", ")) : ""}</div></div></div>`).join("")}
+    </div>`).join("") || `<p class="sub">No matching talks.</p>`;
+
+  const colors = {you: "#7c5cff", speaker: "#79c0ff", school: "#3fb950", company: "#f0883e", topic: "#8b949e"};
+  new vis.Network($("graph"), {
+    nodes: r.graph.nodes.map((n) => ({...n, color: colors[n.group], shape: "dot", size: n.group === "you" ? 22 : n.group === "speaker" ? 14 : 10,
+      font: {color: "#e6edf3", size: 13}})),
+    edges: r.graph.edges.map((e) => ({...e, color: {color: "#30363d"}})),
+  }, {physics: {stabilization: true, barnesHut: {springLength: 120}}, interaction: {hover: true}});
+
+  const first = r.name.split(" ")[0];
+  $("suggest").innerHTML = [`Who should I meet first and why?`, `Plan my Thursday, max 5 sessions`,
+    `Who's posting about MCP or agent security?`, `Which speakers went to my school?`]
+    .map((q) => `<button type="button">${esc(q)}</button>`).join("");
+  $("suggest").querySelectorAll("button").forEach((b) => b.onclick = () => ask(b.textContent));
+
+  $("results").style.display = "block";
+  $("results").scrollIntoView({behavior: "smooth"});
+}
+
+$("chatform").addEventListener("submit", (e) => { e.preventDefault(); if ($("chatin").value.trim()) ask($("chatin").value.trim()); });
+
+async function ask(q) {
+  $("chatin").value = "";
+  chat.push({role: "user", content: q});
+  $("chatlog").insertAdjacentHTML("beforeend", `<div class="msg user">${esc(q)}</div>`);
+  const pending = document.createElement("div");
+  pending.className = "msg bot"; pending.innerHTML = '<span class="spin">◐</span> Querying the knowledge graph…';
+  $("chatlog").appendChild(pending); $("chatlog").scrollTop = $("chatlog").scrollHeight;
+  try {
+    const r = await fetch("/api/chat", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({name: me, messages: chat})});
+    const body = await r.json();
+    if (!r.ok) throw new Error(body.detail || "Chat failed");
+    chat.push({role: "assistant", content: body.answer});
+    pending.innerHTML = marked.parse(body.answer) + (body.queries.length ? `<details class="cypher"><summary>${body.queries.length} graph quer${body.queries.length === 1 ? "y" : "ies"}</summary>${body.queries.map((x) => `<pre>${esc(x)}</pre>`).join("")}</details>` : "");
+  } catch (err) { pending.textContent = "Error: " + err.message; }
+  $("chatlog").scrollTop = $("chatlog").scrollHeight;
+}
+</script>
+</body>
+</html>

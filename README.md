@@ -1,18 +1,45 @@
-# Patch the Conference: graph agent starter
+# Patch the Conference
 
-FalkorDB (graph DB) + an OpenAI tool-calling agent that answers questions by writing Cypher.
+Paste your LinkedIn profile and a conference; get a personal briefing: who to meet and why, what to attend, and an agent you can ask anything about the event.
+
+Bright Data scrapes the conference catalog (a JavaScript-only site, via the Browser API), finds and scrapes every speaker's LinkedIn profile and recent posts, and scrapes yours. Everything lands in a FalkorDB knowledge graph; OpenAI models tag topics, write the "why meet them" reasons and power a chat agent that answers by writing Cypher. The demo supports GitHub Universe 2026 (162 talks, 183 speakers, 144 LinkedIn profiles).
 
 ## Run it
 
 ```sh
-cp .env.example .env            # add your OPENAI_API_KEY and FalkorDB settings (below)
+cp .env.example .env            # add OPENAI_API_KEY and FalkorDB settings (below)
 uv sync
+uv run python -m app.linkedin   # find + scrape speakers' LinkedIn profiles (~400 Bright Data credits; skips what's cached)
 uv run python -m app.tagging    # LLM topic tags for talks + posts (cached; only new items cost anything)
-uv run python -m app.seed       # load GitHub Universe 2026 talks + speakers
-uv run python -m app.agent      # chat
+uv run python -m app.seed       # rebuild the graph from the catalog + scraped data
+uv run uvicorn app.server:app   # web app: http://localhost:8000
+uv run python -m app.agent      # or: chat with the agent in the terminal
 ```
 
-### FalkorDB: cloud or local
+Scraped LinkedIn data is gitignored, so a fresh clone needs the `app.linkedin` step; after that, `app.seed` works offline. `app.seed` wipes and rebuilds the graph, so people added through the web app disappear until they run their briefing again.
+
+### The web app
+
+1. Enter a LinkedIn profile URL and a conference name or URL. Anything other than GitHub Universe gets a "not supported in this demo" message.
+2. The profile is scraped with Bright Data (about a minute; cached afterwards in `data/linkedin/attendees/`).
+3. Interests are inferred from the person's own posts, reshares, reactions and "about" text (`app/profile.py`); no form.
+4. The person is added to the graph, then matched (`app/matching.py`):
+   - **Speakers to meet**, scored: shared school or company +3 each, shared talk topic +2, shared post topic +1. `gpt-5.5` writes a 1-2 sentence reason per speaker from those facts only, ending with a conversation opener.
+   - **Shared background**: speakers from the same school or company, whatever their topics.
+   - **Schedule**: best-matching talks per day with no overlaps (5 minutes between sessions).
+   - **Connection graph**: you, what you share, and your top speakers.
+5. A chat agent (`gpt-5.5`) answers follow-up questions and shows the Cypher it ran.
+
+Try asking: *"Who should I meet first and why?"*, *"Plan my Thursday, max 5 sessions"*, *"Who's posting about MCP or agent security?"*
+
+### Configuration
+
+| Variable | Purpose |
+|---|---|
+| `OPENAI_API_KEY` | Agent, reasons and tagging |
+| `OPENAI_MODEL` | Agent and "why meet them" reasons (default `gpt-5.5`) |
+| `TAGGING_MODEL` | Topic tagging (default `gpt-5.4-mini`) |
+| `FALKORDB_*`, `GRAPH_NAME` | Graph database connection (below) |
 
 **FalkorDB Cloud** (default for this project): set these in `.env` from your instance's connection details.
 
@@ -30,36 +57,32 @@ FALKORDB_SSL=false              # set true if your tier requires TLS
 docker compose up -d            # FalkorDB on :6379, browser UI on http://localhost:3001
 ```
 
-### Bright Data (web data)
-
-Used to scrape real conference and profile data. Install the CLI and log in once:
+**Bright Data**: the code calls the `bdata` CLI, which keeps its own credentials. Install it and log in once:
 
 ```sh
 npm install -g @brightdata/cli
-bdata login --api-key <key>     # run in your own terminal; also add BRIGHTDATA_API_KEY to .env
+bdata login --api-key <key>     # run in your own terminal so the key stays out of logs
 ```
 
-Profiles: `bdata pipelines run gd_l1viktl72bvl7bjuj0 collect_by_url "<linkedin profile url>"`. Agent skills for this live in `.agents/skills/` (symlinked into `.claude/skills/` and other agents' folders).
-
-Try: *"Who should Utsav Jain meet and why?"* or *"Plan my afternoon around AI agents."*
+Bright Data agent skills live in `.agents/skills/` (symlinked into `.claude/skills/` and other agents' folders).
 
 ## Graph model
 
 ```
 (:Person)-[:WORKS_AT]->(:Company)
 (:Person)-[:ALUMNI_OF]->(:School)
-(:Person)-[:INTERESTED_IN]->(:Topic)     # attendees; topics they chose (seed.INTERESTS)
 (:Person)-[:SPEAKS_AT]->(:Talk)-[:ABOUT]->(:Topic)
+(:Person)-[:INTERESTED_IN {score}]->(:Topic)                      # attendees: inferred by the web app, or seed.INTERESTS
 (:Person)-[:POSTED|SHARED|REACTED_TO]->(:Post)-[:ABOUT]->(:Topic)   # recent LinkedIn activity
 ```
 
-`Person` has `title` (speakers), `linkedin`, `location`, and `attendee: true` for attendees. `Talk` has `type`, `day`, `start`, `end`, `room`, `description`.
+`Person` has `title` (speakers), `linkedin`, `location`, and `attendee: true` for attendees. `Talk` has `type`, `day`, `start`, `end`, `room`, `description`. `Post` has `link` and `text`.
 
-See it visually: open your FalkorDB Cloud instance's browser (or http://localhost:3001 and connect to `localhost:6379` for local docker), select graph `conference`, run `MATCH (n)-[r]->(m) RETURN n, r, m`.
+See it visually: open your FalkorDB Cloud instance's browser (or http://localhost:3001 and connect to `localhost:6379` for local docker), select graph `conference`, run `MATCH (n)-[r]->(m) RETURN n, r, m LIMIT 300`.
 
 ## Data
 
-The catalog site renders sessions with JavaScript, so a plain scrape returns only the menu. It was captured with the Browser API (uses the `cli_browser` zone; not covered by free credits):
+**Conference catalog.** The catalog site renders sessions with JavaScript, so a plain scrape returns only the menu. It was captured with the Browser API (uses the `cli_browser` zone; not covered by free credits):
 
 ```sh
 bdata browser open "https://reg.githubuniverse.com/flow/github/universe26/attendee-portal/page/sessioncatalog"
@@ -69,15 +92,21 @@ bdata browser get text -o data/universe26_catalog.txt
 bdata browser close
 ```
 
-Topics are assigned by an LLM (`app/tagging.py`, `TAGGING_MODEL`, default `gpt-5.4-mini`): 0-2 topics per talk or post from a fixed list of 9. Results are cached in `data/talk_topics.json` and `data/linkedin/post_topics.json`; keyword rules in `catalog.TOPICS` are only a fallback for untagged items.
+**Speaker profiles** (`app/linkedin.py`). For each speaker, a SERP search `site:linkedin.com/in "<name>" <company>` (US results, retried) picks the first result whose title contains the speaker's first and last name. Profiles are then scraped in batches of 10, four at a time, and dropped if the scraped name doesn't match. Speakers whose profiles search can't surface go in `data/linkedin/overrides.json` (`{"Name": "url"}`); private profiles come back as `dead_page` and are skipped. `--retry` re-searches speakers that weren't found.
+
+**Topics** (`app/tagging.py`). An LLM picks 0-2 topics per talk or post from a fixed list of 9 (`tagging.TOPICS`). Results are cached in `data/talk_topics.json` and `data/linkedin/post_topics.json`; keyword rules in `catalog.TOPICS` are only a fallback for untagged items.
 
 ## Layout
 
-- `app/db.py`: connection + schema introspection (fed to the LLM)
-- `app/catalog.py`: parses the session catalog into talks, speakers and keyword-based topics
-- `app/linkedin.py`: finds speakers' LinkedIn profiles (SERP search + name check) and scrapes them; hand-checked URLs go in `data/linkedin/overrides.json`
+- `app/catalog.py`: parses the session catalog into talks and speakers (+ keyword topic fallback)
+- `app/linkedin.py`: finds speakers' LinkedIn profiles and scrapes them in parallel batches
 - `app/tagging.py`: LLM topic tagging for talks and posts, with caches
-- `app/seed.py`: loads the catalog, speaker profiles and attendees into the graph
-- `data/linkedin/` (gitignored): scraped profiles; `attendees/` holds one profile JSON per attendee
-- `data/universe26_catalog.txt`: GitHub Universe 2026 session catalog (162 entries), rendered with the Bright Data Browser API
-- `app/agent.py`: chat loop, `run_cypher` tool (read-only queries)
+- `app/seed.py`: rebuilds the graph from the catalog, speaker profiles and attendees
+- `app/profile.py`: adds a user from a LinkedIn URL: scrape (cached), infer interests, upsert into the graph
+- `app/matching.py`: speaker ranking, LLM reasons, shared background, schedule, connection graph
+- `app/server.py` + `app/static/index.html`: FastAPI web app
+- `app/agent.py`: chat agent, `run_cypher` tool (read-only queries)
+- `app/db.py`: connection + schema introspection (fed to the LLM)
+- `data/universe26_catalog.txt`: GitHub Universe 2026 session catalog (162 entries)
+- `data/talk_topics.json`: LLM topic tags for talks
+- `data/linkedin/` (gitignored): scraped profiles, URLs, post topics, overrides; `attendees/` holds one profile per attendee

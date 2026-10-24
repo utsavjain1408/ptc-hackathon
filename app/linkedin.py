@@ -1,12 +1,13 @@
 """Find speakers' LinkedIn profiles via Bright Data and scrape them.
 
-1. SERP search "<name> <company> linkedin" per speaker (1 credit each), keep the first linkedin.com/in/ URL.
+1. SERP search `site:linkedin.com/in "<name>" <company>` per speaker (1 credit per try, up to 3 tries), keep
+   the first linkedin.com/in/ result whose title has the speaker's first and last name.
 2. Scrape found profiles in small parallel batches with the LinkedIn people profiles scraper (1 credit per
    record); each finished batch is saved and added to the graph.
 
-Output goes to data/linkedin/ (gitignored: personal data).
+Output goes to data/linkedin/ (gitignored: personal data). Hand-checked URLs go in data/linkedin/overrides.json.
 
-Run: uv run python -m app.linkedin --limit 10
+Run: uv run python -m app.linkedin [--limit 10] [--retry]
 """
 import argparse
 import json
