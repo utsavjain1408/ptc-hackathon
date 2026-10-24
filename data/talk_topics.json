@@ -1,0 +1,561 @@
+{
+ "A Taste of the Craft - Hosted by Rewind | Monday, Oct 26 | 6:30 PM": [],
+ "Universe Badge Pickup Party! | Tuesday, Oct 27 | 3:00 PM": [],
+ "San Francisco Syntax Meetup | Tuesday, Oct 27 | 5:00 PM": [],
+ "Opening Keynote | Wednesday, Oct 28 | 9:00 AM": [
+  "Developer Experience",
+  "AI Agents"
+ ],
+ "Watch the Keynote from Cowell Theater | Wednesday, Oct 28 | 9:00 AM": [],
+ "Watch the Keynote from the Outdoor Theater | Wednesday, Oct 28 | 9:00 AM": [],
+ "Agentic Workflows: Automation at scale | Wednesday, Oct 28 | 10:15 AM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "Agentic engineering past the pilot: An enterprise playbook | Wednesday, Oct 28 | 10:30 AM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "How one open source project turned funding into security at scale | Wednesday, Oct 28 | 10:30 AM": [
+  "Open Source",
+  "Security"
+ ],
+ "Securing MCP: Real exploits, what actually mitigates them, and what doesn't | Wednesday, Oct 28 | 10:30 AM": [
+  "MCP",
+  "Security"
+ ],
+ "Shut the context window! You're letting the tokens out | Wednesday, Oct 28 | 10:30 AM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Your benchmark is lying: What evals actually look like | Wednesday, Oct 28 | 10:30 AM": [
+  "AI Models & LLMs",
+  "Copilot"
+ ],
+ "Modernizing CI/CD with agents, GitHub Actions, and human oversight (Sponsored) | Wednesday, Oct 28 | 10:50 AM": [
+  "Platform Engineering",
+  "AI Agents"
+ ],
+ "Inside the Lab with GitHub Next | Wednesday, Oct 28 | 11:00 AM": [
+  "Developer Experience",
+  "AI Agents"
+ ],
+ "Stop malicious packages before they reach your build with GitHub Package Firewall | Wednesday, Oct 28 | 11:10 AM": [
+  "Security",
+  "Platform Engineering"
+ ],
+ "Humans set direction. Agents close the loop. | Wednesday, Oct 28 | 11:15 AM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "I made my Octolamp think with GitHub Copilot CLI hooks | Wednesday, Oct 28 | 11:20 AM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "Building AI fluency at UPS | Wednesday, Oct 28 | 11:30 AM": [
+  "Enterprise Adoption",
+  "Copilot"
+ ],
+ "Four primitives to evaluate and improve your on-call agent's autonomy (Sponsored) | Wednesday, Oct 28 | 11:30 AM": [
+  "AI Agents"
+ ],
+ "How GitHub taught Copilot to remember and when to forget | Wednesday, Oct 28 | 11:30 AM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Supercharge Copilot code review with custom review instructions | Wednesday, Oct 28 | 11:30 AM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "Real ways we cut token costs without slowing developers | Wednesday, Oct 28 | 11:40 AM": [
+  "AI Models & LLMs",
+  "Developer Experience"
+ ],
+ "Four days, zero lines: The AI force multiplier | Wednesday, Oct 28 | 11:50 AM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "GitHub Copilot and Windows: Bringing local models into the workflow | Wednesday, Oct 28 | 11:50 AM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Supply chain controls for AI agents with JFrog and GitHub (Sponsored) | Wednesday, Oct 28 | 11:50 AM": [
+  "Security",
+  "AI Agents"
+ ],
+ "Session After Party: Humans set direction. Agents close the loop. | Wednesday, Oct 28 | 12:00 PM": [],
+ "Beyond correct: Making code quality worth acting on | Wednesday, Oct 28 | 12:10 PM": [
+  "Security",
+  "Developer Experience"
+ ],
+ "The Low Orbit Agentic Cannon: Scaling Copilot through internal tooling | Wednesday, Oct 28 | 12:20 PM": [
+  "AI Agents",
+  "Copilot"
+ ],
+ "Build once, run on any agent: a practical guide to agent skills | Wednesday, Oct 28 | 12:30 PM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "What's next with GitHub Next: tomorrow's tools for making software | Wednesday, Oct 28 | 12:30 PM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "Capture the flag: Three AI teams, one codebase, zero mercy | Wednesday, Oct 28 | 12:50 PM": [
+  "Security",
+  "AI Agents"
+ ],
+ "The factory mindset: Agentic workflows in production | Wednesday, Oct 28 | 12:50 PM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Building a developer knowledge base for GitHub Copilot | Wednesday, Oct 28 | 1:00 PM": [
+  "Copilot",
+  "MCP"
+ ],
+ "Stop waiting on your own pull requests: GitHub Stacked PRs in practice | Wednesday, Oct 28 | 1:10 PM": [
+  "Developer Experience",
+  "Platform Engineering"
+ ],
+ "Accelerate accessibility with AI and automation | Wednesday, Oct 28 | 1:30 PM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "Agent-driven deployment beyond localhost, shared securely with your team (Sponsored) | Wednesday, Oct 28 | 1:30 PM": [
+  "Security",
+  "AI Agents"
+ ],
+ "How to go from alert to pull request in minutes: Wiring NeuBird and Copilot via MCP (Sponsored) | Wednesday, Oct 28 | 1:30 PM": [
+  "MCP",
+  "Copilot"
+ ],
+ "Session After Party: The factory mindset: Agentic workflows in production | Wednesday, Oct 28 | 1:35 PM": [],
+ "The O(1) patch: Securing the supply chain against AI-discovered zero-days | Wednesday, Oct 28 | 1:40 PM": [
+  "Security",
+  "Platform Engineering"
+ ],
+ "Work together, your way, with GitHub Copilot | Wednesday, Oct 28 | 1:40 PM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "The human side of AI: How building community drove 94% Copilot adoption | Wednesday, Oct 28 | 4:30 PM": [
+  "Enterprise Adoption",
+  "Copilot"
+ ],
+ "What happens behind the scenes when you run npm install | Wednesday, Oct 28 | 4:30 PM": [
+  "Security",
+  "Open Source"
+ ],
+ "What open source can teach us about agents in CI/CD | Wednesday, Oct 28 | 4:40 PM": [
+  "Open Source",
+  "Platform Engineering"
+ ],
+ "Agentic Workflows: Automation at scale | Wednesday, Oct 28 | 4:45 PM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "Goodbye, tutorial hell: AI guides and the new documentation layer | Wednesday, Oct 28 | 4:45 PM": [
+  "MCP",
+  "Copilot"
+ ],
+ "Beyond the code: How Forge powers the rest of the SDLC | Wednesday, Oct 28 | 5:00 PM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "Ship It Afterparty | Wednesday, Oct 28 | 5:00 PM": [],
+ "Sunset Boat Cruise | Wednesday, Oct 28 | 5:00 PM": [],
+ "AI in Motion: New Trajectories Evening Reception | Wednesday, Oct 28 | 5:30 PM": [
+  "Enterprise Adoption",
+  "AI Agents"
+ ],
+ "Happy hour hosted by Faros | Wednesday, Oct 28 | 5:30 PM": [],
+ "NeuBird + FluidCloud Happy Hour | Wednesday, Oct 28 | 5:30 PM": [],
+ "Recovery Hour with Rubrik | Wednesday, Oct 28 | 5:30 PM": [],
+ "Ship & Sip | Wednesday, Oct 28 | 5:30 PM": [],
+ "Bitrise Connect San Francisco | Wednesday, Oct 28 | 6:00 PM": [
+  "Platform Engineering"
+ ],
+ "Builders on the Green | Wednesday, Oct 28 | 6:00 PM": [],
+ "DevOps on Draft: A Universe Git-Together | Wednesday, Oct 28 | 6:00 PM": [
+  "Platform Engineering"
+ ],
+ "Exclusive Live Cooking Experience for Security Leaders | Wednesday, Oct 28 | 6:00 PM": [
+  "Security",
+  "Enterprise Adoption"
+ ],
+ "Happy Hour with Insight | Wednesday, Oct 28 | 6:00 PM": [],
+ "Xebia's Broad Street Oyster Bash | Wednesday, Oct 28 | 6:00 PM": [
+  "Developer Experience",
+  "Enterprise Adoption"
+ ],
+ "Start day 2 with your Grace Hopper community | Thursday, Oct 29 | 8:00 AM": [],
+ "Beyond the prompt: Building an AI that takes initiative | Wednesday, Oct 28 | 3:20 PM": [
+  "AI Agents",
+  "AI Models & LLMs"
+ ],
+ "Rediscover the command line: Practical workflows with GitHub CLI | Wednesday, Oct 28 | 3:25 PM": [
+  "Developer Experience",
+  "Copilot"
+ ],
+ "GitHub Copilot at scale: An interactive lab for enterprise admins | Wednesday, Oct 28 | 3:30 PM": [
+  "Enterprise Adoption",
+  "Copilot"
+ ],
+ "How to see what your agent is building before it builds it (Sponsored) | Wednesday, Oct 28 | 3:30 PM": [
+  "MCP",
+  "Copilot"
+ ],
+ "PATs, rulesets, and IP allowlists: How Confluent secured GitHub Enterprise Cloud | Wednesday, Oct 28 | 3:30 PM": [
+  "Security",
+  "Enterprise Adoption"
+ ],
+ "Still open: How AI reshaped open source | Wednesday, Oct 28 | 3:30 PM": [
+  "Open Source",
+  "AI Models & LLMs"
+ ],
+ "Stop guessing: What 100M pull requests and 150T tokens tell us about AI impact (Sponsored) | Wednesday, Oct 28 | 3:30 PM": [
+  "Enterprise Adoption",
+  "AI Models & LLMs"
+ ],
+ "What happens between pressing Enter and getting a response from GitHub Copilot | Wednesday, Oct 28 | 3:30 PM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Building Copilot in the cloud | Wednesday, Oct 28 | 3:40 PM": [
+  "Copilot",
+  "Platform Engineering"
+ ],
+ "Agentic modernization of .NET and Java apps with GitHub Copilot | Wednesday, Oct 28 | 3:45 PM": [
+  "Copilot",
+  "Platform Engineering"
+ ],
+ "From x86/x64 to Arm: Migrating a Large-Scale Linux Web App with GitHub Copilot (Sponsored) | Wednesday, Oct 28 | 3:50 PM": [
+  "Platform Engineering",
+  "MCP"
+ ],
+ "Women in Tech Networking Reception | Wednesday, Oct 28 | 4:00 PM": [],
+ "Session After Party: Beyond the prompt: Building an AI that takes initiative | Wednesday, Oct 28 | 4:05 PM": [],
+ "What Copilot code review catches (and how to build a custom agent for the rest) | Wednesday, Oct 28 | 4:05 PM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Build without breaking trust (Sponsored) | Wednesday, Oct 28 | 4:10 PM": [
+  "Enterprise Adoption",
+  "Platform Engineering"
+ ],
+ "How a shared AI config became Slack's internal tool platform | Wednesday, Oct 28 | 4:10 PM": [
+  "MCP",
+  "Enterprise Adoption"
+ ],
+ "One skill, one CLI, one production health report | Wednesday, Oct 28 | 4:10 PM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "When is local Copilot worth it? Three open-weight coders vs. Copilot out of the box | Wednesday, Oct 28 | 4:25 PM": [
+  "AI Models & LLMs",
+  "Copilot"
+ ],
+ "Connecting Copilot | Wednesday, Oct 28 | 4:30 PM": [
+  "Copilot",
+  "MCP"
+ ],
+ "Security by default: a maintainer’s wishlist for GitHub Actions v2 | Wednesday, Oct 28 | 4:30 PM": [
+  "Security",
+  "Platform Engineering"
+ ],
+ "Volunteer with GitHub Gives | Thursday, Oct 29 | 8:00 AM": [],
+ "Admin readiness for AI usage management | Thursday, Oct 29 | 9:00 AM": [
+  "Enterprise Adoption",
+  "Copilot"
+ ],
+ "Beyond pass or fail: How agents verify AI-generated code (Sponsored) | Thursday, Oct 29 | 9:00 AM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "Building domain-specific AI agents for hardware reliability at NVIDIA | Thursday, Oct 29 | 9:00 AM": [
+  "AI Agents",
+  "Copilot"
+ ],
+ "Opening the black box: Tracing, debugging, and fixing your GitHub Actions agents (Sponsored) | Thursday, Oct 29 | 9:00 AM": [
+  "AI Agents",
+  "MCP"
+ ],
+ "Scaling GitHub’s infrastructure for how developers build today | Thursday, Oct 29 | 9:00 AM": [
+  "Platform Engineering"
+ ],
+ "Stop prompting, start delegating: Configure Copilot to own the work | Thursday, Oct 29 | 9:00 AM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "The view from the labs: What's next for AI-assisted development | Thursday, Oct 29 | 9:00 AM": [
+  "AI Models & LLMs",
+  "Developer Experience"
+ ],
+ "Visa's Zero-Secrets Initiative: no hardcoded secrets, no exceptions | Thursday, Oct 29 | 9:00 AM": [
+  "Security",
+  "Enterprise Adoption"
+ ],
+ "Agentic Workflows: Automation at scale | Thursday, Oct 29 | 9:05 AM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "GitHub configuration as code: Scaling org management with Terraform | Thursday, Oct 29 | 9:15 AM": [
+  "Platform Engineering",
+  "Enterprise Adoption"
+ ],
+ "AI agents write the code. Novus decides what to build next. (Sponsored) | Thursday, Oct 29 | 9:20 AM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "The 2am RCA Agent: Architecting AI that investigates, not hallucinates | Thursday, Oct 29 | 9:30 AM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "When a prototype becomes critical, does your GitHub policy know? (Sponsored) | Thursday, Oct 29 | 9:35 AM": [
+  "Security",
+  "Enterprise Adoption"
+ ],
+ "Resolve your security alerts faster with GitHub Copilot | Thursday, Oct 29 | 9:40 AM": [
+  "Security",
+  "Copilot"
+ ],
+ "Session After Party: The view from the labs: What's next for AI-assisted development | Thursday, Oct 29 | 9:45 AM": [
+  "AI Models & LLMs"
+ ],
+ "What's worth building when AI can build anything? | Thursday, Oct 29 | 9:50 AM": [
+  "AI Models & LLMs",
+  "Developer Experience"
+ ],
+ "IBM Neo: From specifications to verified software delivery (Sponsored) | Thursday, Oct 29 | 9:55 AM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Delete the wiki: An MCP platform that closes its own loop | Thursday, Oct 29 | 10:00 AM": [
+  "MCP",
+  "AI Agents"
+ ],
+ "From AI-assisted work to agent-enabled delivery: Scaling AI across product teams | Thursday, Oct 29 | 10:00 AM": [
+  "Enterprise Adoption",
+  "AI Agents"
+ ],
+ "Inside Copilot's model router: How auto picks the right model for every task | Thursday, Oct 29 | 12:05 PM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Inside the Lab with GitHub Next | Thursday, Oct 29 | 12:05 PM": [],
+ "17 agents, one SDLC: How Levi Strauss reimagined development on GitHub | Thursday, Oct 29 | 12:15 PM": [
+  "AI Agents",
+  "MCP"
+ ],
+ "People, process, and GitHub: Eliminating 90% of enterprise AppSec risk | Thursday, Oct 29 | 12:20 PM": [
+  "Security",
+  "Enterprise Adoption"
+ ],
+ "Plugins and engines: Extending GitHub Copilot live | Thursday, Oct 29 | 12:25 PM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Make your Postgres agent-ready: Branching, isolation, and safer shipping | Thursday, Oct 29 | 12:45 PM": [
+  "Platform Engineering",
+  "AI Agents"
+ ],
+ "MCP, skills, or custom agents: Picking the right tool for the job | Thursday, Oct 29 | 12:45 PM": [
+  "Copilot",
+  "MCP"
+ ],
+ "Discover, install, and manage agent skills from your terminal with gh skill | Thursday, Oct 29 | 12:55 PM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "A pixel dog that writes songs: Lessons from my first MCP server | Thursday, Oct 29 | 1:00 PM": [
+  "MCP"
+ ],
+ "Beyond the repository: Using a migration to rethink how you build | Thursday, Oct 29 | 1:00 PM": [
+  "Platform Engineering",
+  "Enterprise Adoption"
+ ],
+ "One CLI to replace your entire JavaScript toolchain | Thursday, Oct 29 | 1:00 PM": [
+  "Open Source",
+  "Developer Experience"
+ ],
+ "Session After Party: 17 agents, one SDLC: How Levi Strauss reimagined development on GitHub | Thursday, Oct 29 | 1:00 PM": [],
+ "Treat your AI context as infrastructure | Thursday, Oct 29 | 1:00 PM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "How we optimize GitHub Copilot for every new model. | Thursday, Oct 29 | 1:05 PM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Sketching with code in the age of AI | Thursday, Oct 29 | 1:05 PM": [
+  "AI Models & LLMs",
+  "Open Source"
+ ],
+ "Jev: Shipping a category-creator | Thursday, Oct 29 | 1:15 PM": [
+  "AI Models & LLMs",
+  "Developer Experience"
+ ],
+ "Prioritization as code: Assumptions by pull request, scored by AI | Thursday, Oct 29 | 1:20 PM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Closing Keynote | Thursday, Oct 29 | 2:00 PM": [],
+ "Watch the Keynote from Cowell Theater | Thursday, Oct 29 | 2:00 PM": [],
+ "Watch the Keynote from the Outdoor Theater | Thursday, Oct 29 | 2:00 PM": [],
+ "Tonga Room & Hurricane Bar Conference Cool Down Happy Hour | Thursday, Oct 29 | 5:00 PM": [],
+ "Figma Developer Meetup | Thursday, Oct 29 | 6:00 PM": [
+  "MCP",
+  "AI Agents"
+ ],
+ "How to ship fast, measure impact, and know when to intervene in the AI era (Sponsored) | Thursday, Oct 29 | 10:00 AM": [
+  "Platform Engineering",
+  "AI Agents"
+ ],
+ "Write-only code: What happens to peer review when agents write the diffs | Thursday, Oct 29 | 10:00 AM": [
+  "AI Agents",
+  "Developer Experience"
+ ],
+ "Your agents write the fix. Observability supplies the context. (Sponsored) | Thursday, Oct 29 | 10:00 AM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Build and run AI locally with NVIDIA (Sponsored) | Thursday, Oct 29 | 10:15 AM": [
+  "AI Models & LLMs",
+  "Copilot"
+ ],
+ "How to turn your team's repeated workflows into GitHub Copilot CLI skills | Thursday, Oct 29 | 10:15 AM": [
+  "Copilot",
+  "Developer Experience"
+ ],
+ "How Microsoft AI builds coding models optimized for GitHub Copilot | Thursday, Oct 29 | 10:20 AM": [
+  "AI Models & LLMs",
+  "Copilot"
+ ],
+ "Open PRs, don't merge them: Fine-grained authorization for hosted MCP servers | Thursday, Oct 29 | 10:30 AM": [
+  "MCP",
+  "Security"
+ ],
+ "Session After Party: What's worth building when AI can build anything? | Thursday, Oct 29 | 10:35 AM": [],
+ "Automating PR quality with Copilot CLI and GitHub Actions | Thursday, Oct 29 | 10:40 AM": [
+  "Copilot",
+  "Platform Engineering"
+ ],
+ "How GitHub secures open source | Thursday, Oct 29 | 10:40 AM": [
+  "Security",
+  "Open Source"
+ ],
+ "AI, Actions, and tooling: Coinbase's move to GitHub with data residency | Thursday, Oct 29 | 11:00 AM": [
+  "Enterprise Adoption",
+  "Platform Engineering"
+ ],
+ "AI and attacks wipe your code and workflow in seconds. Can you recover? (Sponsored) | Thursday, Oct 29 | 11:00 AM": [
+  "Security",
+  "Platform Engineering"
+ ],
+ "We shipped governance: What broke, what worked, what we’d do again | Thursday, Oct 29 | 11:00 AM": [
+  "Enterprise Adoption",
+  "Platform Engineering"
+ ],
+ "Give GitHub Copilot more work context with Work IQ | Thursday, Oct 29 | 11:25 AM": [
+  "Copilot",
+  "AI Models & LLMs"
+ ],
+ "Session After Party: How GitHub secures open source | Thursday, Oct 29 | 11:25 AM": [],
+ "Drowning in AI-generated vulnerability reports? Here's how to stay afloat | Thursday, Oct 29 | 11:30 AM": [
+  "Security",
+  "Open Source"
+ ],
+ "Own your Copilot: Advanced customization for developers and platform teams | Thursday, Oct 29 | 11:30 AM": [
+  "Copilot",
+  "Enterprise Adoption"
+ ],
+ "Your CI has full internet access. GitHub Actions firewall changes that. | Thursday, Oct 29 | 11:45 AM": [
+  "Platform Engineering",
+  "Security"
+ ],
+ "Copilot at scale: What 95% more pull requests taught us about measuring success | Thursday, Oct 29 | 12:00 PM": [
+  "Copilot",
+  "Enterprise Adoption"
+ ],
+ "The night shift: Copilot agents that maintain their own self-hosted runners | Thursday, Oct 29 | 12:00 PM": [
+  "Copilot",
+  "Platform Engineering"
+ ],
+ "What does shift left mean in an agentic world? (Sponsored) | Wednesday, Oct 28 | 1:45 PM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Auth for agents: How auth.md lets agents skip the sign-up form (Sponsored) | Wednesday, Oct 28 | 1:50 PM": [
+  "AI Agents",
+  "MCP"
+ ],
+ "Automate the everyday with Copilot Automations | Wednesday, Oct 28 | 2:05 PM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Bringing AI-detected secret scanning to push time and on-prem environments | Wednesday, Oct 28 | 2:10 PM": [
+  "Security",
+  "AI Models & LLMs"
+ ],
+ "Code is the easy part: Building Home Assistant in the open | Wednesday, Oct 28 | 2:10 PM": [
+  "Open Source",
+  "Developer Experience"
+ ],
+ "Expand Copilot beyond coding: Non-code workflows your team isn't using yet | Wednesday, Oct 28 | 2:20 PM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Build a self-validating agentic loop with GitHub Copilot (Sponsored) | Wednesday, Oct 28 | 2:25 PM": [
+  "Copilot",
+  "Platform Engineering"
+ ],
+ "Session After Party: Work together, your way, with GitHub Copilot | Wednesday, Oct 28 | 2:25 PM": [
+  "Copilot"
+ ],
+ "Agentic security for every developer | Wednesday, Oct 28 | 2:30 PM": [
+  "Security",
+  "AI Agents"
+ ],
+ "Beyond \"hours saved\": How AMD and ING measure AI at enterprise scale | Wednesday, Oct 28 | 2:30 PM": [
+  "Enterprise Adoption",
+  "AI Models & LLMs"
+ ],
+ "Day 1 deploy, day 2 recovery: AI agents across the full delivery lifecycle (Sponsored) | Wednesday, Oct 28 | 2:30 PM": [
+  "AI Agents",
+  "Platform Engineering"
+ ],
+ "Disrupting supply chain attacks: A threat framework for GitHub Actions | Wednesday, Oct 28 | 2:30 PM": [
+  "Security",
+  "Platform Engineering"
+ ],
+ "One PM, four weeks, full compliance: How itti shipped a banking product with agents | Wednesday, Oct 28 | 2:30 PM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "Who's watching the agents? What AI code does in production | Wednesday, Oct 28 | 2:40 PM": [
+  "Security",
+  "AI Agents"
+ ],
+ "Turning user feedback into requirements with a custom Copilot agent | Wednesday, Oct 28 | 2:45 PM": [
+  "Copilot",
+  "AI Agents"
+ ],
+ "Going beyond suggestions: How to govern agentic workflows in GitHub (Sponsored) | Wednesday, Oct 28 | 2:50 PM": [
+  "AI Agents",
+  "Enterprise Adoption"
+ ],
+ "Keep vulnerabilities out of your codebase, without leaving where you build | Wednesday, Oct 28 | 3:05 PM": [
+  "Security",
+  "Copilot"
+ ],
+ "How to shift specifications from contracts to hypotheses | Wednesday, Oct 28 | 3:10 PM": [
+  "AI Models & LLMs",
+  "AI Agents"
+ ],
+ "How to think about reachability and use it to prioritize vulnerabilities | Wednesday, Oct 28 | 3:10 PM": [
+  "Security"
+ ],
+ "Session After Party: Disrupting supply chain attacks: A threat framework for GitHub Actions | Wednesday, Oct 28 | 3:15 PM": [
+  "Security",
+  "Platform Engineering"
+ ]
+}
