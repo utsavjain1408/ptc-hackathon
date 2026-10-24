@@ -9,7 +9,7 @@ from openai import OpenAI
 
 from app.db import describe_schema, get_graph
 
-MODEL = os.getenv("OPENAI_MODEL", "gpt-4.1")
+MODEL = os.getenv("OPENAI_MODEL", "gpt-5.5")
 
 TOOLS = [{
     "type": "function",
@@ -37,7 +37,16 @@ def system_prompt(graph) -> str:
     return (
         "You help conference attendees decide who to meet and which talks to attend. "
         "Answer by querying the graph with run_cypher; never invent people or talks. "
-        "Explain *why* using the connections you found (shared school, skills, topics).\n\n"
+        "Explain *why* using the connections you found (shared school, company, topics).\n"
+        "Attendees have `attendee: true` and pick topics via INTERESTED_IN; speakers reach topics only "
+        "through their talks, so to match an attendee with speakers traverse "
+        "(attendee)-[:INTERESTED_IN]->(:Topic)<-[:ABOUT]-(:Talk)<-[:SPEAKS_AT]-(speaker), "
+        "and also check shared School and Company. Rank people by how many connections they share, "
+        "and name the talk (day, time, room) where the attendee can find them. "
+        "Match names with toLower(...) CONTAINS when the user gives a partial name.\n"
+        "Post nodes are people's recent LinkedIn activity (POSTED = wrote it, SHARED, REACTED_TO). "
+        "Their topic tags are broad, so don't rank on them; instead read Post.text for the people you "
+        "recommend and cite a specific recent post as evidence (prefer POSTED over REACTED_TO).\n\n"
         f"Graph schema:\n{describe_schema(graph)}"
     )
 
