@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from openai import OpenAI
 from pydantic import BaseModel
 
-from app import matching, profile
+from app import buzz, matching, profile
 from app.agent import MODEL, TOOLS, run_cypher, system_prompt
 from app.db import get_graph
 
@@ -64,13 +64,18 @@ def _run(job_id: str, req: AnalyzeRequest):
         speakers = matching.speakers(g, name)
         job["result"] = {
             "name": name,
-            "headline": rec.get("position") or rec.get("about", "")[:120],
+            "headline": rec.get("position") or (rec.get("about") or "")[:120],
             "avatar": rec.get("avatar"),
             "interests": interests,
             "speakers": speakers,
             "background": matching.shared_background(g, name),
             "schedule": matching.schedule(g, name),
             "graph": matching.connection_graph(name, speakers, interests),
+            # Authors of posts they liked/reshared: the closest public proxy for their connections.
+            "network": matching.network_buzz(g, name, sorted({
+                s for a in rec.get("activity") or []
+                if profile.seed._engagement(a.get("interaction")) != "POSTED"
+                and (s := buzz.author_slug(a.get("link")))})),
         }
         step(4, "done", f"{len(speakers)} speakers, {sum(len(v) for v in job['result']['schedule'].values())} talks")
         step(5, "running")

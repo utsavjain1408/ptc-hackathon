@@ -84,7 +84,7 @@ def add_reasons(person: dict, interests_: list[dict], matches: list[dict]) -> No
             "shared_topics": sorted(set(m["talk_topics"]) | set(m["post_topics"])),
             "talks": [{"title": t["title"], "when": f"{t['day']} {t['start']}", "about": (t.get("description") or "")[:400]}
                       for t in m["talks"]],
-            "recent_post": (m["post"] or {}).get("text", "")[:400],
+            "recent_post": ((m["post"] or {}).get("text") or "")[:400],
         } for m in matches],
     }
     resp = OpenAI().chat.completions.create(
@@ -96,6 +96,38 @@ def add_reasons(person: dict, interests_: list[dict], matches: list[dict]) -> No
     reasons = json.loads(resp.choices[0].message.content).get("reasons", {})
     for m in matches:
         m["reason"] = reasons.get(m["name"])
+
+
+def network_buzz(g, name: str, engaged_slugs: list[str]) -> dict:
+    """People in the user's circle posting about the conference, plus the latest posts from anyone.
+
+    "Circle" = coworkers, fellow alumni, or authors whose posts the user liked or reshared (connections
+    lists are private, so this is the best public signal).
+    """
+    circle = _rows(g, """
+        MATCH (u:Person {name: $name}), (a:Person {buzz: true})-[:POSTED]->(p:Post {conference: true})
+        WHERE a <> u
+        OPTIONAL MATCH (u)-[:WORKS_AT]->(c:Company)<-[:WORKS_AT]-(a)
+        OPTIONAL MATCH (u)-[:ALUMNI_OF]->(s:School)<-[:ALUMNI_OF]-(a)
+        WITH a, collect(DISTINCT c.name) AS companies, collect(DISTINCT s.name) AS schools,
+             collect(DISTINCT {text: p.text, link: p.link, date: p.date}) AS posts
+        WITH a, companies, schools, posts, a.linkedin_slug IN $engaged AS engaged
+        WHERE engaged OR size(companies) > 0 OR size(schools) > 0
+        OPTIONAL MATCH (a)-[:SPEAKS_AT]->(t:Talk)
+        RETURN a.name AS name, a.linkedin AS linkedin, companies, schools, engaged, posts,
+               collect(DISTINCT t.title) AS talks
+        ORDER BY CASE WHEN engaged THEN 3 ELSE 0 END + 2 * size(schools) + size(companies) DESC, name  // engagement ~ a real connection
+        LIMIT 12
+    """, {"name": name, "engaged": engaged_slugs})
+    latest = _rows(g, """
+        MATCH (a:Person {buzz: true})-[:POSTED]->(p:Post {conference: true})
+        WHERE a.name <> $name
+        OPTIONAL MATCH (a)-[:WORKS_AT]->(c:Company)
+        RETURN a.name AS name, a.linkedin AS linkedin, c.name AS company, p.text AS text, p.link AS link, p.date AS date
+        ORDER BY p.date DESC LIMIT 6
+    """, {"name": name})
+    total = g.ro_query("MATCH (:Person {buzz: true})-[:POSTED]->(p:Post {conference: true}) RETURN count(p)").result_set[0][0]
+    return {"circle": circle, "latest": latest, "total_posts": total}
 
 
 def shared_background(g, name: str) -> list[dict]:
@@ -115,7 +147,10 @@ def _minutes(day: str, t: str) -> tuple[str, int]:
 
 
 def schedule(g, name: str, per_day: int = 6) -> dict[str, list[dict]]:
-    """Best-matching talks per day, greedily picked so none overlap (5 minutes to walk between rooms)."""
+    """Best-matching talks per day, greedily picked so none overlap (5 minutes to walk between rooms).
+
+    With no interests, falls back to headline sessions; those talks carry `general: true`.
+    """
     talks = _rows(g, """
         MATCH (:Person {name: $name})-[i:INTERESTED_IN]->(tp:Topic)<-[:ABOUT]-(t:Talk)
         WHERE NOT t.type IN $skip
@@ -125,6 +160,18 @@ def schedule(g, name: str, per_day: int = 6) -> dict[str, list[dict]]:
                t.room AS room, score, topics, collect(sp.name) AS speakers
         ORDER BY score DESC
     """, {"name": name, "skip": NOT_TALKS})
+
+    if not talks:  # no interests to match: headline sessions first, then the most-staffed breakouts
+        talks = _rows(g, """
+            MATCH (t:Talk) WHERE NOT t.type IN $skip
+            OPTIONAL MATCH (sp:Person)-[:SPEAKS_AT]->(t)
+            OPTIONAL MATCH (t)-[:ABOUT]->(tp:Topic)
+            WITH t, collect(DISTINCT sp.name) AS speakers, collect(DISTINCT tp.name) AS topics
+            RETURN t.title AS title, t.type AS type, t.day AS day, t.start AS start, t.end AS end,
+                   t.room AS room, 0 AS score, topics, speakers, true AS general
+            ORDER BY CASE t.type WHEN 'Keynote' THEN 0 WHEN 'Main Stage' THEN 1 WHEN 'Panel Discussion' THEN 2
+                     WHEN 'Breakout Session' THEN 3 ELSE 4 END, size(speakers) DESC
+        """, {"skip": NOT_TALKS})
 
     days: dict[str, list[dict]] = {}
     for t in talks:

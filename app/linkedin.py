@@ -11,10 +11,14 @@ Run: uv run python -m app.linkedin [--limit 10] [--retry]
 """
 import argparse
 import json
+import os
 import re
+import shutil
 import subprocess
 import threading
+import time
 import unicodedata
+import urllib.request
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
@@ -62,7 +66,36 @@ def find_profile_url(name: str, company: str | None) -> str | None:
     return None
 
 
+def _scrape_rest(urls: list[str], timeout: int = 900) -> list[dict]:
+    """The same scrape via Bright Data's REST API, for hosts without the bdata CLI (needs BRIGHTDATA_API_KEY)."""
+    key = os.getenv("BRIGHTDATA_API_KEY")
+    if not key:
+        raise RuntimeError("Scraping new profiles needs the bdata CLI or BRIGHTDATA_API_KEY")
+    api = "https://api.brightdata.com/datasets/v3"
+
+    def call(path, body=None):
+        req = urllib.request.Request(f"{api}/{path}", data=json.dumps(body).encode() if body is not None else None,
+                                     headers={"Authorization": f"Bearer {key}", "Content-Type": "application/json"})
+        with urllib.request.urlopen(req, timeout=60) as resp:
+            return resp.status, json.loads(resp.read() or b"null")
+
+    _, trig = call(f"trigger?dataset_id={PROFILES_DATASET}&include_errors=true", [{"url": u} for u in urls])
+    snap, deadline = trig["snapshot_id"], time.time() + timeout
+    while time.time() < deadline:
+        _, prog = call(f"progress/{snap}")
+        if prog.get("status") == "ready":
+            status, data = call(f"snapshot/{snap}?format=json")
+            if status == 200:
+                return data
+        elif prog.get("status") == "failed":
+            raise RuntimeError(f"Bright Data snapshot {snap} failed")
+        time.sleep(5)
+    raise TimeoutError(f"Bright Data snapshot {snap} not ready after {timeout}s")
+
+
 def scrape_profiles(urls: list[str]) -> list[dict]:
+    if not shutil.which("bdata"):
+        return _scrape_rest(urls)
     out = subprocess.run(
         ["bdata", "pipelines", "run", PROFILES_DATASET, "collect_by_url", *urls, "--json", "--timeout", "1800"],
         capture_output=True, text=True, check=True,
@@ -135,7 +168,7 @@ def main():
     def handle(batch_urls, records):
         added = {}
         for rec in records:
-            name = todo.get(rec.get("input", {}).get("url")) or todo.get(rec.get("input_url"))
+            name = todo.get((rec.get("input") or {}).get("url")) or todo.get(rec.get("input_url"))
             if not name:
                 continue
             if rec.get("error"):  # e.g. dead_page: "The profile is hidden or private."

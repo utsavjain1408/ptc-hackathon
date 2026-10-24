@@ -62,9 +62,34 @@ def infer_interests(rec: dict, max_topics: int = 4) -> list[dict]:
 
     ranked = sorted(scores.items(), key=lambda kv: -kv[1])
     if not ranked:
-        return []
+        return _interests_from_background(rec, max_topics)
     floor = max(2, ranked[0][1] * 0.25)  # drop topics with only a stray reaction behind them
     return [{"topic": t, "score": s, "evidence": evidence[t]} for t, s in ranked[:max_topics] if s >= floor]
+
+
+def _interests_from_background(rec: dict, max_topics: int) -> list[dict]:
+    """No posts to go on: tag what the profile itself lists (title, company, certifications, projects, courses)."""
+    items = {}
+    company = (rec.get("current_company") or {}).get("name") or rec.get("current_company_name")
+    if rec.get("position") or company:
+        items["role"] = ("Role", " at ".join(filter(None, [rec.get("position"), company])))
+    for kind, key in (("Certification", "certifications"), ("Project", "projects"), ("Course", "courses")):
+        for i, x in enumerate(rec.get(key) or []):
+            text = " ".join(filter(None, [x.get("title"), x.get("subtitle"), (x.get("description") or "")[:300]]))
+            if text:
+                items[f"{key}{i}"] = (kind, text)
+    if not items:
+        return []
+    tags = tagging._classify(OpenAI(), {k: text for k, (_, text) in items.items()})
+    scores, evidence = defaultdict(int), defaultdict(list)
+    for k, topics in tags.items():
+        kind, text = items[k]
+        for t in topics:
+            scores[t] += 1
+            if len(evidence[t]) < 2:
+                evidence[t].append(f"From your profile ({kind.lower()}): {text[:200]}")
+    ranked = sorted(scores.items(), key=lambda kv: -kv[1])[:max_topics]
+    return [{"topic": t, "score": s, "evidence": evidence[t], "source": "profile"} for t, s in ranked]
 
 
 def add_to_graph(g, rec: dict, interests: list[dict]) -> str:
