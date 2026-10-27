@@ -4,6 +4,28 @@ Paste your LinkedIn profile and a conference; get a personal briefing: who to me
 
 Bright Data scrapes the conference catalog (a JavaScript-only site, via the Browser API), finds and scrapes every speaker's LinkedIn profile and recent posts, and scrapes yours. Everything lands in a FalkorDB knowledge graph; OpenAI models tag topics, write the "why meet them" reasons and power a chat agent that answers by writing Cypher. The demo supports GitHub Universe 2026 (162 talks, 183 speakers, 144 LinkedIn profiles).
 
+## Screenshots
+
+Briefing for a real profile, captured from the deployed app ([full page](docs/screenshots/00-briefing-full.png)).
+
+![Landing page](docs/screenshots/01-landing.png)
+
+| Interests inferred from your posts | Your schedule, no overlaps |
+|---|---|
+| ![Your interests](docs/screenshots/03-your-interests.png) | ![Your schedule](docs/screenshots/05-your-schedule.png) |
+
+**Speakers to meet**, each with a reason and a conversation opener:
+
+![Speakers to meet](docs/screenshots/04-speakers-to-meet.png)
+
+**How you're connected**: you, what you share, and your top speakers:
+
+<img src="docs/screenshots/06-how-youre-connected.png" alt="Connection graph" width="520">
+
+**The agent** answers follow-ups by querying the graph:
+
+![Agent chat](docs/screenshots/08-agent-chat.png)
+
 ## Run it
 
 ```sh
@@ -36,7 +58,7 @@ Try asking: *"Who should I meet first and why?"*, *"Plan my Thursday, max 5 sess
 
 ### Deploy (spawnpoint)
 
-The app is live at https://patch-the-conference.spwt.app (python runtime, `main.py` serves on `0.0.0.0:$PORT`, dependencies from `requirements.txt`). Set the same variables as `.env` in the project's environment, plus `BRIGHTDATA_API_KEY`: without the `bdata` CLI on the host, `app/linkedin.py` scrapes profiles through Bright Data's REST API instead. The bundle needs the code, `data/talk_topics.json` and optionally `data/linkedin/post_topics.json` and `data/linkedin/attendees/` (cached profiles load instantly); the rest of `data/linkedin/` is already in the graph. Profiles scraped on the server are cached under the app folder, so a redeploy clears them.
+The app ran at https://patch-the-conference.spwt.app during the hackathon and has since been taken down (python runtime, `main.py` serves on `0.0.0.0:$PORT`, dependencies from `requirements.txt`). Set the same variables as `.env` in the project's environment, plus `BRIGHTDATA_API_KEY`: without the `bdata` CLI on the host, `app/linkedin.py` scrapes profiles through Bright Data's REST API instead. The bundle needs the code, `data/talk_topics.json` and optionally `data/linkedin/post_topics.json` and `data/linkedin/attendees/` (cached profiles load instantly); the rest of `data/linkedin/` is already in the graph. Profiles scraped on the server are cached under the app folder, so a redeploy clears them.
 
 ### Configuration
 
